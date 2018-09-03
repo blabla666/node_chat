@@ -17,11 +17,13 @@ var net = require('net');
 var others_map = new Set();
 
 var server = net.createServer(function(socket) {
-	socket.write('Echo server has ' + others_map.size + ' users right now\r\n');
+	socket.write("Content-type: text/html\r\n\r\nEcho server has " + others_map.size + ' users right now\r\n');
 	socket.on('data', function(chunk) {
 		others_map.forEach(function(a){
 			if(a !== socket )
+			{
 				a.write(chunk);
+			}
 		});
 	  });
 	  socket.on('end', function(){others_map.delete(socket)});
