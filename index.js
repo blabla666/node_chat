@@ -1,33 +1,28 @@
-const express = require('express')
-const path = require('path')
-const PORT = process.env.PORT || 5000
+var WebSocketServer = require("ws").Server
+var http = require("http")
+var express = require("express")
+var app = express()
+var port = process.env.PORT || 5000
 
-/*
-express()
-  .use(express.static(path.join(__dirname, 'public')))
-  .set('views', path.join(__dirname, 'views'))
-  .set('view engine', 'ejs')
-  .get('/', (req, res) => res.render('pages/index'))
-  .get('/port', (req, res) => {res.write(`Listening on ${ PORT }`); res.end()})
-  .listen(PORT, () => console.log(`Listening on ${ PORT }`))
-*/
+app.use(express.static(__dirname + "/"))
 
-var net = require('net');
+var server = http.createServer(app)
+server.listen(port)
 
-var others_map = new Set();
+console.log("http server listening on %d", port)
 
-var server = net.createServer(function(socket) {
-	socket.write("Content-type: text/html\r\n\r\nEcho server has " + others_map.size + ' users right now\r\n');
-	socket.on('data', function(chunk) {
-		others_map.forEach(function(a){
-			if(a !== socket )
-			{
-				a.write(chunk);
-			}
-		});
-	  });
-	  socket.on('end', function(){others_map.delete(socket)});
-	others_map.add(socket);
-});
+var wss = new WebSocketServer({server: server})
+console.log("websocket server created")
 
-server.listen(PORT);
+wss.on("connection", function(ws) {
+  var id = setInterval(function() {
+    ws.send(JSON.stringify(new Date()), function() {  })
+  }, 1000)
+
+  console.log("websocket connection open")
+
+  ws.on("close", function() {
+    console.log("websocket connection close")
+    clearInterval(id)
+  })
+})
