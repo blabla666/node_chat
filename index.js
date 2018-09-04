@@ -23,7 +23,7 @@ wss.on("connection", function(ws) {
 
   console.log("websocket connection open")
   
-  ws.on('data', function(chunk){
+  ws.on('message', function(chunk){
 	  others_map.forEach(function(a){
 			if(a !== ws )
 			{
