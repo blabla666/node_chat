@@ -19,14 +19,14 @@
 
     <script>
       var host = location.origin.replace(/^http/, 'ws')
-      var ws = new WebSocket(host);
+      var ws = new WebSocket("ws://zliczak.herokuapp.com/");
       ws.onmessage = function (event) {
         var li = document.createElement('li');
-        li.innerHTML = JSON.parse(event.data);
+        li.innerHTML = event.data + "";
         document.querySelector('#pings').appendChild(li);
       };
 	  
-	  ws.send("ETH\r\nRMII\r\n");
+	  ws.onopen = function(){ ws.send("ETH\r\nRMII\r\n") }
     </script>
   </head>
   <body>
