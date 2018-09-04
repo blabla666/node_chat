@@ -25,7 +25,7 @@ wss.on("connection", function(ws) {
   
   ws.on('message', function(chunk){
 	for(var a in others_map)
-		if(others_map[a] !== ws )
+		//if(others_map[a] !== ws )
 		{
 			others_map[a].send(chunk);
 		}
