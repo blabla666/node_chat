@@ -10,27 +10,92 @@
         list-style: none;
         margin: 0;
         padding: 0;
+		white-space: pre
       }
 
       ul li {
         line-height: 1.4;
       }
+	  
+	  textarea
+	  {
+		width: 70%;
+		height: 70%;
+	  }
     </style>
 
     <script>
       var host = location.origin.replace(/^http/, 'ws')
       var ws = new WebSocket("ws://zliczak.herokuapp.com/");
       ws.onmessage = function (event) {
-        var li = document.createElement('li');
-        li.innerHTML = event.data + "";
-        document.querySelector('#pings').appendChild(li);
+        var li = document.getElementById('outw');
+		if( event.data instanceof Blob )
+		{
+			var reader = new FileReader()
+			reader.onload = function(){
+				li.value += reader.result + "\r\n"
+				li.scrollTop = li.scrollHeight;
+			}
+			reader.readAsText( event.data )
+		}
+//        li.innerHTML = event.data.toString() + "kot";
+//        document.querySelector('#pings').appendChild(li);
       };
 	  
 	  ws.onopen = function(){ ws.send("ETH\r\nRMII\r\n") }
+	  
+	  
+	  
+	  
+	   function Init () {
+            var textarea = document.getElementById ("textarea");
+
+            if (textarea.addEventListener) {    // all browsers except IE before version 9
+                textarea.addEventListener ("input", OnInput, false);
+                    // Google Chrome and  Safari
+                textarea.addEventListener ("textInput", OnTextInput, false);
+                    // Internet Explorer from version 9
+                textarea.addEventListener ("textinput", OnTextInput, false);
+            }
+            
+            if (textarea.attachEvent) { // Internet Explorer and Opera
+                textarea.attachEvent ("onpropertychange", OnPropChanged);   // Internet Explorer
+            }
+        }
+
+            // Google Chrome, Safari and Internet Explorer from version 9
+        function OnTextInput (event) {
+            alert ("The following text has been entered: " + event.data);
+        }
+            // Firefox, Google Chrome, Opera, Safari from version 5, Internet Explorer from version 9
+        function OnInput (event) {
+            alert ("The new content: " + event.target.value);
+        }
+            // Internet Explorer
+        function OnPropChanged (event) {
+            if (event.propertyName.toLowerCase () == "value") {
+                alert ("The new content: " + event.srcElement.value);
+            }
+        }
+		
+		 function GetChar (event){
+            var chCode = event.charCode || event.keyCode;
+            if( chCode == 13 )
+			{
+				var textarea = document.getElementById ("textarea");
+				ws.send(textarea.value.toUpperCase() + "\r\n")
+				textarea.value = ""
+			}
+        }
     </script>
   </head>
-  <body>
+  <body onload__="Init ();">
     <h1>Pings</h1>
     <ul id='pings'></ul>
+	<textarea id="outw">Textarea</textarea>
+	<div>
+	Enter command here: 
+	<input type="text" id="textarea" onkeypress="GetChar (event);"/>
+	</div>
   </body>
 </html>
