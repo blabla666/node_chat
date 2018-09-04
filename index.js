@@ -23,14 +23,14 @@ wss.on("connection", function(ws) {
 
   console.log("websocket connection open")
   
-  ws.on('message', function(chunk){
-	  others_map.forEach(function(a){
-			if(a !== ws )
-			{
-				a.send(chunk);
-			}
-		});
-  });
+  // ws.on('message', function(chunk){
+	  // others_map.forEach(function(a){
+			// if(a !== ws )
+			// {
+				// a.send(chunk);
+			// }
+		// });
+  // });
 
   ws.on("close", function() {
     console.log("websocket connection close")
