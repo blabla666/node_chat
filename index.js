@@ -14,29 +14,29 @@ console.log("http server listening on %d", port)
 var wss = new WebSocketServer({server: server})
 console.log("websocket server created")
 
-var others_map = new Set();
+//var others_map = new Set();
 
 wss.on("connection", function(ws) {
   // var id = setInterval(function() {
-    // ws.send(JSON.stringify(new Date()), function() {  })
+   //  ws.send(JSON.stringify(new Date()), function() {  })
   // }, 1000)
 
   console.log("websocket connection open")
   
-  // ws.on('message', function(chunk){
+  ws.on('message', function(chunk){
 	  // others_map.forEach(function(a){
 			// if(a !== ws )
 			// {
 				// a.send(chunk);
 			// }
 		// });
-  // });
+  });
 
   ws.on("close", function() {
     console.log("websocket connection close")
-	others_map.delete(ws)
+	//others_map.delete(ws)
     //clearInterval(id)
   })
   
-  others_map.add(ws);
+  //others_map.add(ws);
 })
