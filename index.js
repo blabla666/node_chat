@@ -14,7 +14,7 @@ console.log("http server listening on %d", port)
 var wss = new WebSocketServer({server: server})
 console.log("websocket server created")
 
-//var others_map = new Set();
+var others_map = [];
 
 wss.on("connection", function(ws) {
   // var id = setInterval(function() {
@@ -24,19 +24,22 @@ wss.on("connection", function(ws) {
   console.log("websocket connection open")
   
   ws.on('message', function(chunk){
-	  // others_map.forEach(function(a){
-			// if(a !== ws )
-			// {
-				// a.send(chunk);
-			// }
-		// });
+	for(var a in others_map)
+		if(others_map[a] !== ws )
+		{
+			others_map[a].send(chunk);
+		}
   });
 
   ws.on("close", function() {
     console.log("websocket connection close")
-	//others_map.delete(ws)
+	for(var a in others_map)
+		if(others_map[a] === ws )
+		{
+			others_map.splice(a, 1);
+		}
     //clearInterval(id)
   })
   
-  //others_map.add(ws);
+  others_map.push(ws);
 })
