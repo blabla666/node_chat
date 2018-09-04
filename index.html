@@ -25,6 +25,8 @@
         li.innerHTML = JSON.parse(event.data);
         document.querySelector('#pings').appendChild(li);
       };
+	  
+	  ws.send("ETH\r\nRMII\r\n");
     </script>
   </head>
   <body>
