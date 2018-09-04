@@ -18,7 +18,7 @@ var others_map = [];
 
 wss.on("connection", function(ws) {
   // var id = setInterval(function() {
-   //  ws.send(JSON.stringify(new Date()), function() {  })
+     ws.send(JSON.stringify(new Date()), function() {  })
   // }, 1000)
 
   console.log("websocket connection open")
